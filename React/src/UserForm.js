@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Form, Button } from 'react-bootstrap';
 
 const UserForm = ({ setUsers }) => {
     const [name, setName] = useState('');
@@ -76,26 +77,38 @@ const UserForm = ({ setUsers }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>
-                Name:
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-            </label>
-            <br />
-            <label>
-                Email:
-                <input 
-                    type="email" 
-                    value={email} 
-                    onChange={handleEmailChange} 
-                    onBlur={handleEmailBlur} // Add the blur event handler
-                    required />
-                {emailError && <p style={{ color: 'red' }}>{emailError}</p>}
-            </label>
-            <br />
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <button type="submit">Add User</button>
-        </form>
+        <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="formName">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                    type="text"
+                    placeholder="Enter name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    isInvalid={!!error}
+                />
+            </Form.Group>
+
+            <Form.Group controlId="formEmail">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                    type="email"
+                    placeholder="Enter email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    isInvalid={!!error}
+                />
+                <Form.Control.Feedback type="invalid">
+                    {error}
+                    {emailError}
+                </Form.Control.Feedback>
+            </Form.Group>
+
+            <Button variant="primary" type="submit">
+                Add User
+            </Button>
+        </Form>
+
     );
 };
 

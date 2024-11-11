@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Table, Button } from 'react-bootstrap';
 
 const UserList = ({ users, setUsers }) => {
     const [error, setError] = useState('');
@@ -40,15 +41,41 @@ const UserList = ({ users, setUsers }) => {
     return (
         <div>
             <h2>User List</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <ul>
-                {users.map(user => (
-                    <li key={user.id}>
-                        {user.name} - {user.email}
-                        <button onClick={() => handleDelete(user.id)}>Delete</button>
-                    </li>
-                ))}
-            </ul>
+            <Table striped bordered hover responsive>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {users.length === 0 ? (
+                        <tr>
+                            <td colspan="4" classname="text-center">
+                                No users found
+                            </td>
+                        </tr>
+                    ) : (
+                        users.map((user, index) => (
+                            <tr key={user.id}>
+                                <td>{user.id}</td>
+                                <td>{user.name}</td>
+                                <td>{user.email}</td>
+                                <td>
+                                    <Button
+                                        variant="danger"
+                                        onClick={() => handleDelete(user.id)}
+                                    >
+                                        Delete
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))
+                    )}
+                </tbody>
+            </Table>
         </div>
     );
 };
