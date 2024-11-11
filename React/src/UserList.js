@@ -2,26 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button } from 'react-bootstrap';
 
 const UserList = ({ users, setUsers }) => {
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-
-    // Fetch users from the server
-    const fetchUsers = async () => {
-        try {
-            const response = await fetch('http://localhost:3000/users'); // Ensure this endpoint is correct
-            if (!response.ok) {
-                throw new Error('Failed to fetch users');
-            }
-            const data = await response.json();
-            setUsers(data); // Set users from the server response
-        } catch (err) {
-            setError(err.message);
-        }
-    };
 
     // Handle delete user
     const handleDelete = async (id) => {
         try {
-            const response = await fetch(`http://localhost:3000/users/${id}`, {
+            const response = await fetch(`http://localhost:3000/api/users/${id}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {
@@ -35,8 +22,29 @@ const UserList = ({ users, setUsers }) => {
     };
 
     useEffect(() => {
+        // Fetch users from the server
+        const fetchUsers = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/api/users'); // Ensure this endpoint is correct
+                if (!response.ok) {
+                    throw new Error('Failed to fetch users');
+                }
+                const data = await response.json();
+                setUsers(data); // Set users from the server response
+            } catch (err) {
+                console.error(err);
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchUsers(); // Fetch users when the component mounts
-    }, []);
+    }, [setUsers]);
+
+    if (loading) {
+        return <div>Loading...</div>
+    }
 
     return (
         <div>
